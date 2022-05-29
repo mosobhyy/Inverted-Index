@@ -517,7 +517,7 @@ class Index
         {
             for (int j = i + 1; j < srcs.length; j++)
             {
-                String docsName = sources.get(srcs[i]) + " and " + sources.get(srcs[j]) + " cosine similarity = ";
+                String docsName = sources.get(srcs[i]) + " and " + sources.get(srcs[j]);
                 double similarity = cosine_similarity(table.get(i), table.get(j));
                 ranked_results.put(docsName, similarity);
             }
@@ -537,7 +537,7 @@ class Index
 
         for (HashMap.Entry<String, Double> entry : ranked_results.entrySet())
         {
-            System.out.println("\t" + entry.getKey() + " ----> " + entry.getValue());
+            System.out.println("\t" + entry.getKey() + " cosine similarity ----> " + entry.getValue());
         }
     }
 }
