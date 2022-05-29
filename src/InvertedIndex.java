@@ -457,7 +457,7 @@ class Index
 
     //-----------------------------------------------------------------------
 
-    private HashMap<String, Double> ranked_search(String phrase)
+    private HashMap<String, Double> ranked_jaccard_search(String phrase)
     {
         HashMap<String, Double> ranked_results = new HashMap<>();
         // Get all relevant docs
@@ -479,9 +479,9 @@ class Index
         return ranked_results;
     }
 
-    public void get_ranked_search(String phrase)
+    public void get_jaccard_search(String phrase)
     {
-        HashMap<String, Double> ranked_results = ranked_search(phrase);
+        HashMap<String, Double> ranked_results = ranked_jaccard_search(phrase);
 
         for (HashMap.Entry<String, Double> entry : ranked_results.entrySet())
         {

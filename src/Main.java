@@ -99,9 +99,9 @@ public class Main
                     phrase.append(word);
                 }
                 System.out.println("******************************");
-                // Ranked Search
-                System.out.println("Ranked Search Result:");
-                index.get_ranked_search(String.valueOf(phrase));
+                // Ranked Jaccard Similarity Search
+                System.out.println("Ranked Jaccard Similarity Search Result:");
+                index.get_jaccard_search(String.valueOf(phrase));
             }
 
             if (phrase.isEmpty()) System.out.println("Invalid Input");
