@@ -40,7 +40,7 @@ public class Main
             // Split cleaned phrase into words
             separated_phrase = phrase.toString().split("\\W+");
 
-            if (separated_phrase.length > 0)
+            if (!phrase.isEmpty())
             {
                 HashSet<Integer> last_result;
                 // In case of (not word) as input phrase
