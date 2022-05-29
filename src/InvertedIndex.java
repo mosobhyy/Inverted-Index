@@ -458,6 +458,88 @@ class Index
         for (HashMap.Entry<String, Double> entry : ranked_results.entrySet())
             System.out.println("\t" + entry.getKey() + " ----> " + entry.getValue());
     }
+
+    //-----------------------------------------------------------------------
+
+    private double dotProd(ArrayList<Double> x, ArrayList<Double> y)
+    {
+        if (x.size() != y.size())
+            throw new RuntimeException("Arrays must be same size");
+        double result = 0;
+        for (int i = 0; i < x.size(); i++)
+            result += x.get(i) * y.get(i);
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
+
+    private double magnitude(ArrayList<Double> x)
+    {
+        double result = 0;
+        for (double i : x) result += Math.pow(i, 2);
+        return Math.sqrt(result);
+    }
+
+
+    //-----------------------------------------------------------------------
+    private double cosine_similarity(ArrayList<Double> x, ArrayList<Double> y)
+    {
+        double dot = dotProd(x, y);
+        double magnitude = magnitude(x) * magnitude(y);
+        double result = dot / magnitude;
+
+        // Set 5 precision
+        result = Math.round(result * 100000) / 100000.0;
+
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
+    private HashMap<String, Double> ranked_cosine_similarity(String phrase)
+    {
+        HashMap<String, Double> ranked_results = new HashMap<>();
+
+        HashMap<Integer, ArrayList<Double>> table = new HashMap<>();
+        Integer[] srcs = sources.keySet().toArray(new Integer[0]);
+
+        String[] phrase_words = phrase.toLowerCase().split("\\W+");
+
+        for (Integer src : srcs)
+        {
+            for (String word : phrase_words)
+            {
+                double value = index.get(word).postingList.contains(src) ? 1.0 : 0.0;
+                table.computeIfAbsent(src, k -> new ArrayList<>()).add(value);
+            }
+        }
+
+        for (int i = 0; i < srcs.length - 1; i++)
+        {
+            for (int j = i + 1; j < srcs.length; j++)
+            {
+                String docsName = sources.get(srcs[i]) + " and " + sources.get(srcs[j]) + " cosine similarity = ";
+                double similarity = cosine_similarity(table.get(i), table.get(j));
+                ranked_results.put(docsName, similarity);
+            }
+        }
+
+        // Sort results in descending order
+        ranked_results = sortByValue(ranked_results);
+
+        return ranked_results;
+    }
+
+    //-----------------------------------------------------------------------
+
+    public void get_cosine_search(String phrase)
+    {
+        HashMap<String, Double> ranked_results = ranked_cosine_similarity(phrase);
+
+        for (HashMap.Entry<String, Double> entry : ranked_results.entrySet())
+        {
+            System.out.println("\t" + entry.getKey() + " ----> " + entry.getValue());
+        }
+    }
 }
 
 //=====================================================================
