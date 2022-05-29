@@ -111,10 +111,10 @@ class Index
         {
             res.retainAll(index.get(word).postingList);
         }
+
         for (int num : res)
-        {
             result += "\t" + sources.get(num) + "\n";
-        }
+
         return result;
     }
 
@@ -122,14 +122,9 @@ class Index
     HashSet<Integer> intersect(HashSet<Integer> pL1, HashSet<Integer> pL2)
     {
         HashSet<Integer> answer = new HashSet<Integer>();
-        ;
         Iterator<Integer> itP1 = pL1.iterator();
         Iterator<Integer> itP2 = pL2.iterator();
         int docId1 = 0, docId2 = 0;
-//        INTERSECT ( p1 , p2 )
-//          1 answer ←   {}
-        // answer =
-//          2 while p1  != NIL and p2  != NIL
         if (itP1.hasNext())
             docId1 = itP1.next();
         if (itP2.hasNext())
@@ -137,45 +132,24 @@ class Index
 
         while (itP1.hasNext() && itP2.hasNext())
         {
-
-//          3 do if docID ( p 1 ) = docID ( p2 )
             if (docId1 == docId2)
             {
-//          4   then ADD ( answer, docID ( p1 ))
-//          5       p1 ← next ( p1 )
-//          6       p2 ← next ( p2 )
                 answer.add(docId1);
                 docId1 = itP1.next();
                 docId2 = itP2.next();
-            } //          7   else if docID ( p1 ) < docID ( p2 )
-            //          8        then p1 ← next ( p1 )
-            else if (docId1 < docId2)
-            {
-                if (itP1.hasNext())
-                    docId1 = itP1.next();
-                else return answer;
-
-            } else
-            {
-//          9        else p2 ← next ( p2 )
-                if (itP2.hasNext())
-                    docId2 = itP2.next();
-                else return answer;
-
             }
-
+            else if (docId1 < docId2)
+                docId1 = itP1.next();
+            else
+                docId2 = itP2.next();
         }
         if (docId1 == docId2)
-        {
             answer.add(docId1);
-        }
 
-//          10 return answer
         return answer;
     }
     //-----------------------------------------------------------------------
 
-    //----------------------------------------------------------------------------
     HashSet<Integer> union(HashSet<Integer> pL1, HashSet<Integer> pL2)
     {
         HashSet<Integer> answer = new HashSet<>();
@@ -190,7 +164,6 @@ class Index
 
         return answer;
     }
-    //-----------------------------------------------------------------------
 
     //----------------------------------------------------------------------------
     HashSet<Integer> difference(HashSet<Integer> pL1, HashSet<Integer> pL2)
@@ -220,7 +193,6 @@ class Index
         }
 
         // check last element because while loop break before checking it
-//        if (docId1 != docId2 && itP1.hasNext())
         if (docId1 != docId2)
             answer.add(itP1.next());
 
@@ -262,9 +234,8 @@ class Index
 
         result = "Found in: \n";
         for (int num : answer)
-        {
             result += "\t" + sources.get(num) + "\n";
-        }
+
         return result;
     }
 //-----------------------------------------------------------------------
@@ -282,9 +253,8 @@ class Index
         HashSet<Integer> answer2 = intersect(pL3, answer1);
 
         for (int num : answer2)
-        {
             result += "\t" + sources.get(num) + "\n";
-        }
+
         return result;
 
     }
@@ -303,10 +273,10 @@ class Index
             res = intersect(res, index.get(words[i].toLowerCase()).postingList);
             i++;
         }
+
         for (int num : res)
-        {
             result += "\t" + sources.get(num) + "\n";
-        }
+
         return result;
     }
 
@@ -379,10 +349,11 @@ class Index
             res = intersect(res, index.get(words[i].toLowerCase()).postingList);
             i++;
         }
+
         for (int num : res)
-        {
             result += "\t" + sources.get(num) + "\n";
-        }
+
+
         return result;
     }
     //-----------------------------------------------------------------------
@@ -449,9 +420,8 @@ class Index
         // put data from sorted list to hashmap
         HashMap<String, Double> temp = new LinkedHashMap<String, Double>();
         for (Map.Entry<String, Double> aa : list)
-        {
             temp.put(aa.getKey(), aa.getValue());
-        }
+
         return temp;
     }
 
@@ -479,14 +449,14 @@ class Index
         return ranked_results;
     }
 
+    //-----------------------------------------------------------------------
+
     public void get_jaccard_search(String phrase)
     {
         HashMap<String, Double> ranked_results = ranked_jaccard_search(phrase);
 
         for (HashMap.Entry<String, Double> entry : ranked_results.entrySet())
-        {
             System.out.println("\t" + entry.getKey() + " ----> " + entry.getValue());
-        }
     }
 }
 
