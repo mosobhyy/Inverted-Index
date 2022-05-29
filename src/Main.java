@@ -30,21 +30,36 @@ public class Main
             // Remove all words that not exist in the index
             String[] separated_phrase = phrase.toString().split("\\W+");
             phrase = new StringBuilder("");
+
+            // flag to identify if phrase has indexed words except operators words
+            boolean has_indexed_words = false;
+
             for (String word : separated_phrase)
-                if (operators.contains(word) || index.index.containsKey(word))
+            {
+                if (index.index.containsKey(word))
                 {
-                    if(!phrase.isEmpty()) phrase.append(" ");
+                    has_indexed_words = true;
+
+                    if (!phrase.isEmpty()) phrase.append(" ");
+
                     phrase.append(word);
                 }
+                else if (operators.contains(word))
+                {
+                    if (!phrase.isEmpty()) phrase.append(" ");
+                    phrase.append(word);
+                }
+            }
 
             // Split cleaned phrase into words
             separated_phrase = phrase.toString().split("\\W+");
 
-            if (!phrase.isEmpty())
+            if (has_indexed_words)
             {
+                System.out.println("\ninput after cleaning (indexed words only):\n\t\"" + phrase + "\"");
                 HashSet<Integer> last_result;
-                // In case of (not word) as input phrase
 
+                // In case of (not word) as input phrase
                 if (separated_phrase.length == 2 && separated_phrase[0].contentEquals("not"))
                 {
                     HashSet<Integer> src = new HashSet<Integer>(index.sources.keySet());
@@ -83,16 +98,16 @@ public class Main
                 }
                 System.out.println("******************************");
                 // Result of phrase
-                System.out.println("Result:");
+                System.out.println("Found in:");
                 for (Integer num : last_result)
                     System.out.println("\t" + index.sources.get(num));
 
-                // Delete all operators from phrase
+                // Delete all non-indexed operators from phrase
                 separated_phrase = phrase.toString().split("\\W+");
                 phrase = new StringBuilder("");
                 for (String word : separated_phrase)
                 {
-                    if (operators.contains(word))
+                    if (!index.index.containsKey(word))
                         continue;
 
                     if(!phrase.isEmpty()) phrase.append(" ");
@@ -104,12 +119,14 @@ public class Main
                 System.out.println("Ranked Jaccard Similarity Search Result:");
                 index.get_jaccard_search(String.valueOf(phrase));
 
+                System.out.println("******************************");
+
                 // Ranked Cosine Similarity Search
                 System.out.println("Ranked Cosine Similarity Search Result:");
                 index.get_cosine_search(String.valueOf(phrase));
             }
 
-            if (phrase.isEmpty()) System.out.println("Invalid Input");
+            else System.out.println("\n--- non-indexed input ! ---\n");
             System.out.println("******************************");
         } while (true);
 
